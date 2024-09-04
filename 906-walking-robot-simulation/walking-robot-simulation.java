@@ -1,50 +1,33 @@
-public class Solution {
+import java.util.HashSet;
+import java.util.Set;
+
+class Solution {
     public int robotSim(int[] commands, int[][] obstacles) {
-        // Store obstacles in a set for O(1) lookup
-        Set<String> obs = new HashSet<>();
-        for (int[] obstacle : obstacles) {
-            obs.add(obstacle[0] + "," + obstacle[1]);
+        int x=0,y=0,d=0;
+        int[][] direction={{0,1},{1,0},{0,-1},{-1,0}};
+        int maxDistance=0;
+        Set<String> obstacleSet=new HashSet<>();
+        for(int[] obstacle:obstacles){
+            obstacleSet.add(obstacle[0]+","+obstacle[1]);
         }
-
-        // Direction vectors for [N, E, S, W]
-        int[][] directionVectors = {
-            {0, 1},   // North -> +Y direction
-            {1, 0},   // East -> +X direction
-            {0, -1},  // South -> -Y direction
-            {-1, 0}   // West -> -X direction
-        };
-
-        // Map for changing directions
-        int[][] dirChangeMap = {
-            {3, 1}, // N -> Left: W (index 3), Right: E (index 1)
-            {0, 2}, // E -> Left: N (index 0), Right: S (index 2)
-            {1, 3}, // S -> Left: E (index 1), Right: W (index 3)
-            {2, 0}  // W -> Left: S (index 2), Right: N (index 0)
-        };
-
-        int currDirection = 0; // Start facing North
-        int x = 0, y = 0;
-        int maxDist = 0;
-
-        for (int command : commands) {
-            if (command > 0) {
-                int dx = directionVectors[currDirection][0];
-                int dy = directionVectors[currDirection][1];
-                for (int i = 0; i < command; i++) {
-                    int nextX = x + dx;
-                    int nextY = y + dy;
-                    if (obs.contains(nextX + "," + nextY)) {
+        for(int cmd:commands){
+            if(cmd==-1){
+                d=(d+1)%4;
+            }else if(cmd==-2){
+                d=(d+3)%4;
+            }else{
+                for(int i=0;i<cmd;i++){
+                    int nx=x+direction[d][0];
+                    int ny=y+direction[d][1];
+                    if(obstacleSet.contains(nx+","+ny)){
                         break;
                     }
-                    x = nextX;
-                    y = nextY;
+                    x=nx;
+                    y=ny;
+                    maxDistance=Math.max(maxDistance,x*x+y*y);
                 }
-                maxDist = Math.max(maxDist, x * x + y * y);
-            } else {
-                currDirection = dirChangeMap[currDirection][command == -1 ? 1 : 0];
             }
         }
-
-        return maxDist;
+        return maxDistance;
     }
 }
