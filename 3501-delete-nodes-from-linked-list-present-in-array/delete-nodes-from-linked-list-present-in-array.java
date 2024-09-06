@@ -1,6 +1,8 @@
 class Solution {
     public ListNode modifiedList(int[] nums, ListNode head) {
-        boolean[] valuesToRemove = new boolean[100001];
+        final int MAX_VAL = 100000;
+        boolean[] valuesToRemove = new boolean[MAX_VAL + 1];
+        
         for (int num : nums) {
             valuesToRemove[num] = true;
         }
