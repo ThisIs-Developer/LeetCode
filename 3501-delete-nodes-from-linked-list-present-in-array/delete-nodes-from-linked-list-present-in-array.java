@@ -1,10 +1,8 @@
 class Solution {
     public ListNode modifiedList(int[] nums, ListNode head) {
-        final int MAX_VAL = 100000;
-        boolean[] valuesToRemove = new boolean[MAX_VAL + 1];
-        
+        Set<Integer> valuesToRemove = new HashSet<>();
         for (int num : nums) {
-            valuesToRemove[num] = true;
+            valuesToRemove.add(num);
         }
 
         ListNode dummy = new ListNode(0);
@@ -12,7 +10,7 @@ class Solution {
         ListNode current = dummy;
 
         while (current.next != null) {
-            if (valuesToRemove[current.next.val]) {
+            if (valuesToRemove.contains(current.next.val)) {
                 current.next = current.next.next;
             } else {
                 current = current.next;
