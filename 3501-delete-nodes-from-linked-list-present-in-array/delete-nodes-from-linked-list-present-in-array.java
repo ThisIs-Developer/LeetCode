@@ -1,21 +1,19 @@
 class Solution {
     public ListNode modifiedList(int[] nums, ListNode head) {
-        Set<Integer> valuesToRemove = new HashSet<>();
-        for (int num : nums) {
-            valuesToRemove.add(num);
-        }
-
-        ListNode dummy = new ListNode(0, head);
-        ListNode current = dummy;
-
-        while (current.next != null) {
-            if (valuesToRemove.contains(current.next.val)) {
-                current.next = current.next.next;
-            } else {
-                current = current.next;
+        Set<Integer> toBeDel = new HashSet<>();
+        for(var num : nums)toBeDel.add(num);
+        ListNode dummyHead = new ListNode();
+        dummyHead.next = head;
+        ListNode curr = dummyHead, prev = dummyHead;
+        while(curr != null){
+            ListNode nextNode = curr.next;
+            if(toBeDel.contains(curr.val)){
+                prev.next = nextNode;
+            }else{
+                prev = curr;
             }
+            curr = nextNode;
         }
-
-        return dummy.next;
+        return dummyHead.next;
     }
 }
