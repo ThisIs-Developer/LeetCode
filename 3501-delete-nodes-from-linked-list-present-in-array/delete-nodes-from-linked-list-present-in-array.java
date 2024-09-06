@@ -1,9 +1,13 @@
 class Solution {
     public ListNode modifiedList(int[] nums, ListNode head) {
-        Set<Integer> valuesToRemove = new HashSet<>(Arrays.asList(Arrays.stream(nums).boxed().toArray(Integer[]::new)));
+        Set<Integer> valuesToRemove = new HashSet<>();
+        for (int num : nums) {
+            valuesToRemove.add(num);
+        }
+
         ListNode dummy = new ListNode(0, head);
         ListNode current = dummy;
-        
+
         while (current.next != null) {
             if (valuesToRemove.contains(current.next.val)) {
                 current.next = current.next.next;
@@ -11,7 +15,7 @@ class Solution {
                 current = current.next;
             }
         }
-        
+
         return dummy.next;
     }
 }
