@@ -1,6 +1,7 @@
 class Solution {
     public ListNode modifiedList(int[] nums, ListNode head) {
-        Set<Integer> valuesToRemove = new HashSet<>();
+        // Directly initialize HashSet with known size to avoid resizing
+        Set<Integer> valuesToRemove = new HashSet<>(nums.length);
         for (int num : nums) {
             valuesToRemove.add(num);
         }
