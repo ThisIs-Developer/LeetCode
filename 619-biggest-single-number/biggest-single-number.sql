@@ -1,13 +1,7 @@
-SELECT
-    MAX(num) AS 'num'
+SELECT MAX(num) AS num
 FROM (
-    SELECT
-        num
-    FROM
-        mynumbers
-    GROUP BY
-        num
-    HAVING
-        COUNT(*) = 1
-) AS unique_numbers
-    
+    SELECT num
+    FROM MyNumbers
+    GROUP BY num
+    HAVING COUNT(*) = 1
+) AS SingleNumbers;
