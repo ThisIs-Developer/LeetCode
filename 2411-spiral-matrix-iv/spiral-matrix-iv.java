@@ -9,54 +9,96 @@
  * }
  */
 class Solution {
+    // my code 
+    // public void fillup(int[][] arr,int i,int j,ListNode head){
+    //     if(head!=null){
+    //         arr[i][j] = head.val;
+    //     }
+    //     else{
+    //         arr[i][j] = -1;
+    //     }
+    // } 
+    // public int[][] spiralMatrix(int m, int n, ListNode head) {
+    //     int left =0;
+    //     int right = n-1;
+    //     int top =0;
+    //     int bottom = m-1;
+    //     int[][] result = new int[m][n];
+    //     while(left<=right && top <=bottom){
+           
+    //         for(int j=left; j<=right;j++){
+    //             fillup(result,top,j,head);
+    //             if(head != null){
+    //                 head = head.next;
+    //             }
+    //         }
+    //         top++; 
+    //         for(int i=top; i<=bottom;i++){
+    //             fillup(result,i,right,head);
+    //             if(head != null){
+    //                 head = head.next;
+    //             }
+    //         } 
+    //         right--;
+    //         if (top <= bottom) {
+    //         for(int j =right; j>=left;j--){
+    //             fillup(result,bottom,j,head);
+    //             if(head != null){
+    //                 head = head.next;
+    //             }
+    //         } 
+    //         bottom--;
+    //         }
+    //         if (left <= right) {
+    //         for(int i=bottom; i>=top;i--){
+    //             fillup(result,i,left,head);
+    //             if(head != null){
+    //                 head = head.next;
+    //             }
+    //         } 
+    //         left++;
+    //         }
+    //     }
+    //     return result; 
+    
+    // better code
     public int[][] spiralMatrix(int m, int n, ListNode head) {
-        int left = 0; int right = n;
-        int top = 0; int bottom = m;
-
-        int[][] result = new int[m][n];
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                result[i][j] = -1;
-            }
+        int left =0;
+        int right = n-1;
+        int top =0;
+        int bottom = m-1;
+        int[][] arr = new int[m][];
+        for(int i=0; i<m;i++){
+            arr[i] = new int[n];
+            Arrays.fill(arr[i],-1);
         }
-
-        while(head != null) {
-            // 1. left to right
-            for(int i = left; i < right; i++) {
-                if(head == null)
-                    return result;
-                result[top][i] = head.val;
-                head  = head.next;
+        while(head != null){
+           
+            for(int j=left; j<=right && head != null;j++){
+                arr[top][j] = head.val;
+                head = head.next;
             }
-            top++;
-
-            // 2. top to bottom
-            for(int i = top; i < bottom; i++) {
-                if(head == null)
-                    return result;
-                result[i][right - 1] = head.val;
-                head  = head.next;
-            }
+            top++; 
+            for(int i=top; i<=bottom && head != null ;i++){
+                arr[i][right] = head.val;
+                head = head.next;
+            } 
             right--;
-
-            // 3. right to left
-            for(int i = right - 1; i >= left; i--) {
-                if(head == null)
-                    return result;
-                result[bottom - 1][i] = head.val;
-                head  = head.next;
-            }
+            if (top <= bottom) {
+            for(int j =right; j>=left && head != null;j--){
+                arr[bottom][j] = head.val;
+                head = head.next;
+            } 
             bottom--;
-
-            // 4. bottom to top
-            for(int i = bottom - 1; i >= top; i--) {
-                if(head == null)
-                    return result;
-                result[i][left] = head.val;
-                head  = head.next;
             }
+            if (left <= right) {
+            for(int i=bottom; i>=top && head != null;i--){
+                arr[i][left] = head.val;
+                head = head.next;
+            } 
             left++;
+            }
         }
-        return result;
+        return arr; 
     }
 }
