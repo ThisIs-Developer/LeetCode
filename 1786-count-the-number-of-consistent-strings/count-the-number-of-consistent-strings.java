@@ -1,21 +1,18 @@
 class Solution {
     public int countConsistentStrings(String allowed, String[] words) {
-        boolean[] arr = new boolean[26];
-        for (char c : allowed.toCharArray()) {
-            arr[c - 97] = true;
+                int cnt = words.length;
+        int arr[] = new int[26];
+        for(char c : allowed.toCharArray()){
+            arr[c - 'a']++;
         }
-        // System.out.println(Arrays.toString(arr));
-        int counter = 0;
-        for (String word : words) {
-            boolean flag = true;
-            for (char c : word.toCharArray()) {
-                if(!arr[c - 97]){
-                    flag = false;
-                    break;
-                }
+
+        for(String s : words){
+            for(char c : s.toCharArray()){
+                if(arr[c-'a']<=0)
+                {cnt--;
+                break;}
             }
-            if(flag) counter++;
         }
-        return counter;
+        return cnt ;
     }
 }
