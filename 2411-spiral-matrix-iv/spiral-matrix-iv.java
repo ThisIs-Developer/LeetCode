@@ -1,37 +1,36 @@
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
 class Solution {
+
     public int[][] spiralMatrix(int m, int n, ListNode head) {
-        int[][] ans = new int[m][n];
-        for (var row : ans) {
+        // Store the east, south, west, north movements in a matrix.
+        int i = 0, j = 0, cur_d = 0, movement[][] = {
+            { 0, 1 },
+            { 1, 0 },
+            { 0, -1 },
+            { -1, 0 },
+        };
+        int[][] res = new int[m][n];
+        for (int[] row : res) {
             Arrays.fill(row, -1);
         }
-        int i = 0, j = 0, k = 0;
-        final int[] dirs = {0, 1, 0, -1, 0};
-        while (true) {
-            ans[i][j] = head.val;
+
+        while (head != null) {
+            res[i][j] = head.val;
+            int newi = i + movement[cur_d][0], newj = j + movement[cur_d][1];
+
+            // If we bump into an edge or an already filled cell, change the
+            // direction.
+            if (
+                Math.min(newi, newj) < 0 ||
+                newi >= m ||
+                newj >= n ||
+                res[newi][newj] != -1
+            ) cur_d = (cur_d + 1) % 4;
+            i += movement[cur_d][0];
+            j += movement[cur_d][1];
+
             head = head.next;
-            if (head == null) {
-                break;
-            }
-            while (true) {
-                int x = i + dirs[k], y = j + dirs[k + 1];
-                if (x >= 0 && x < m && y >= 0 && y < n && ans[x][y] == -1) {
-                    i = x;
-                    j = y;
-                    break;
-                }
-                k = (k + 1) % 4;
-            }
         }
-        return ans;
+
+        return res;
     }
 }
