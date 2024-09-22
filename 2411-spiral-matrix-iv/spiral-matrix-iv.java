@@ -1,21 +1,64 @@
 class Solution {
-  public int[][] spiralMatrix(int m, int n, ListNode head) {
-    final int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-    int[][] ans = new int[m][n];
-    Arrays.stream(ans).forEach(A -> Arrays.fill(A, -1));
-    int x = 0; // the current x position
-    int y = 0; // the current y position
-    int d = 0;
+    public int[][] spiralMatrix(int m, int n, ListNode head) {
+        int[][] result = new int[m][n];
+        List<Integer> aux = new ArrayList<>();
+        String[] actions = { "Right", "Down", "Left", "Up" };
+        int index = 0, i = 0, j = 0, actionsIter = 0, k = 0;
+        int left = 0, right = n - 1, top = 0, bottom = m - 1;
 
-    for (ListNode curr = head; curr != null; curr = curr.next) {
-      ans[x][y] = curr.val;
-      if (x + dirs[d][0] < 0 || x + dirs[d][0] == m || y + dirs[d][1] < 0 || //
-          y + dirs[d][1] == n || ans[x + dirs[d][0]][y + dirs[d][1]] != -1)
-        d = (d + 1) % 4;
-      x += dirs[d][0];
-      y += dirs[d][1];
+        while (head != null) {
+            aux.add(head.val);
+            head = head.next;
+        }
+
+        for (i = 0; i < m; i++) {
+            for (j = 0; j < n; j++) {
+                result[i][j] = -1;
+            }
+        }
+
+        i = 0;
+        j = 0;
+
+        while (k < aux.size()) {
+            if (actions[actionsIter].equals("Right")) {
+                for (j = left; j <= right && k < aux.size(); j++) {
+                    result[top][j] = aux.get(k);
+                    k++;
+                }
+
+                top++;
+                actionsIter++;
+
+            } else if (actions[actionsIter].equals("Down")) {
+                for (i = top; i <= bottom && k < aux.size(); i++) {
+                    result[i][right] = aux.get(k);
+                    k++;
+                }
+
+                right--;
+                actionsIter++;
+
+            } else if (actions[actionsIter].equals("Left")) {
+                for (j = right; j >= left && k < aux.size(); j--) {
+                    result[bottom][j] = aux.get(k);
+                    k++;
+                }
+
+                bottom--;
+                actionsIter++;
+
+            } else if (actions[actionsIter].equals("Up")) {
+                for (i = bottom; i >= top && k < aux.size(); i--) {
+                    result[i][left] = aux.get(k);
+                    k++;
+                }
+
+                left++;
+                actionsIter = 0;
+            }
+        }
+
+        return result;
     }
-
-    return ans;
-  }
 }
