@@ -1,56 +1,38 @@
 class Solution {
     public int[][] spiralMatrix(int m, int n, ListNode head) {
+        int colStart = 0, colEnd = n - 1, rowStart = 0, rowEnd = m - 1;
         int[][] res = new int[m][n];
-
-        for (int[] arr : res) {
-            Arrays.fill(arr, -1);
+        for(int i = 0; i < m; i++) {
+            Arrays.fill(res[i], -1);
         }
-        
-
-        int rowUp = 0, rowDown = m - 1, colLeft = 0, colRight = n - 1;
-
-        while (rowUp <= rowDown && colLeft <= colRight) {
-
-            for (int i = colLeft; i <= colRight; i++) {
-                res[rowUp][i] = head == null ? -1 : head.val;
-                head = head == null ? null : head.next;
+        while(colStart <= rowEnd) {
+            for(int i = colStart; i <= colEnd; i++) {
+                if(head != null) {
+                    res[rowStart][i] = head.val;
+                    head = head.next;
+                }   
             }
-            rowUp++;
-
-            if (rowUp > rowDown) {
+            for(int i = rowStart + 1; i <= rowEnd; i++) {
+                if(head != null) {
+                    res[i][colEnd] = head.val;
+                    head = head.next;
+                }
+            }
+            for(int i = colEnd - 1; i >= colStart; i--) {
+                if(head != null) {
+                    res[rowEnd][i] = head.val;
+                    head = head.next;
+                }
+            }
+            for(int i = rowEnd - 1; i >= rowStart + 1; i--) {
+                if(head != null) {
+                    res[i][colStart] = head.val;
+                    head = head.next;
+                }
+            }
+            if(head == null)
                 break;
-            }
-
-            for (int i = rowUp; i <= rowDown; i++) {
-                res[i][colRight] = head == null ? -1 : head.val;
-                head = head == null ? null : head.next;
-            }
-            colRight--;
-            
-            if (colLeft > colRight) {
-                break;
-            }
-
-            for (int i = colRight; i >= colLeft; i--) {
-                res[rowDown][i] = head == null ? -1 : head.val;
-                head = head == null ? null : head.next;
-            }
-            rowDown--;
-
-            if (rowUp > rowDown) {
-                break;
-            }
-
-            for (int i = rowDown; i >= rowUp; i--) {
-                res[i][colLeft] = head == null ? -1 : head.val;
-                head = head == null ? null : head.next;
-            }
-            colLeft++;
-            
-            if (colLeft > colRight) {
-                break;
-            }
-
+            colStart++; colEnd--; rowStart++; rowEnd--;
         }
         return res;
     }
