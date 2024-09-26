@@ -1,28 +1,51 @@
-import java.util.Map;
-import java.util.TreeMap;
-
 class MyCalendar {
 
-    private final TreeMap<Integer, Integer> tm = new TreeMap<>();
+    class Node {
+        int start;
+        int end;
+        Node left,right;
 
-    public MyCalendar() {
+        public Node(int start,int end){
+            this.start = start;
+            this.end = end;
+        }
     }
 
+    Node root;
+
+    public MyCalendar() {
+        
+    }
+    
     public boolean book(int start, int end) {
-        Map.Entry<Integer, Integer> ent = tm.floorEntry(start);
-        if (ent != null && ent.getValue() > start) {
-            return false;
+        if(root == null){
+            root = new Node(start,end);
+            return true;
         }
-        ent = tm.ceilingEntry(start);
-        if (ent != null && ent.getKey() < end) {
-            return false;
+        Node curr = root;
+        while(curr != null){
+            if(end <= curr.start){
+                if(curr.left == null){
+                    curr.left = new Node(start,end);
+                    return true;
+                }
+                curr = curr.left;
+            }
+            else if(start >= curr.end){
+                if(curr.right == null){
+                    curr.right = new Node(start,end);
+                    return true;
+                }
+                curr = curr.right;
+            }
+            else return false;
         }
-        tm.put(start, end);
-        return true;
+        return false;
     }
 }
 
 /**
- * Your MyCalendar object will be instantiated and called as such: MyCalendar
- * obj = new MyCalendar(); boolean param_1 = obj.book(start,end);
+ * Your MyCalendar object will be instantiated and called as such:
+ * MyCalendar obj = new MyCalendar();
+ * boolean param_1 = obj.book(start,end);
  */
