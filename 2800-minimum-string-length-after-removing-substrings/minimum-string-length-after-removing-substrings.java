@@ -1,28 +1,11 @@
 class Solution {
     public int minLength(String s) {
-        String st=s;
-        while(st.indexOf("AB")>=0 || st.indexOf("CD")>=0)
-        {
-            int idx=0;
-            if(st.indexOf("AB")>=0){
-            idx=st.indexOf("AB");
-            }
-            else if(st.indexOf("CD")>=0)
-            {
-                idx=st.indexOf("CD");
-            }
-            else
-            {
-                break;
-            }
-             if((idx+2)<=st.length()-1)
-            st=st.substring(0,idx)+st.substring(idx+2);
-            else
-            {
-             st=st.substring(0,idx);
-            }
+        StringBuilder sb = new StringBuilder();
+        for(char c:s.toCharArray()){
+            if(c=='B' && sb.length()>0 && sb.charAt(sb.length()-1)=='A') sb.delete(sb.length()-1,sb.length());
+            else if(c=='D' && sb.length()>0 && sb.charAt(sb.length()-1)=='C') sb.delete(sb.length()-1,sb.length());
+            else sb.append(c);
         }
-        System.out.println(st);
-        return st.length();
+        return sb.length();
     }
 }
