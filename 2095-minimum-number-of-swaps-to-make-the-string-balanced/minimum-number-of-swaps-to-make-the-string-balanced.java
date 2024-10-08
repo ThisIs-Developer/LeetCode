@@ -1,15 +1,18 @@
 class Solution {
     public int minSwaps(String s) {
-        int tmp = 0;
-        int res = 0;
-        for(char a:s.toCharArray()){
-            if(a==']'){
-                tmp++;
+        
+        char[] arr = s.toCharArray();
+        int count =0;
+        int max  =0 ;
+        for(int i=0;i<arr.length;i++){
+            char c = arr[i];
+            if(c == ']'){
+                count++;
+                max = Math.max(count, max);
             }else{
-                tmp--;
+                count--;
             }
-            res = Math.max(res,tmp);
         }
-        return (res + 1)/2;
+        return (max+1)/2;
     }
 }
