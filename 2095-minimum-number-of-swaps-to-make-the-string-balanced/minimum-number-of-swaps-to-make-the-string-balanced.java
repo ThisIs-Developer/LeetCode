@@ -1,18 +1,19 @@
 class Solution {
     public int minSwaps(String s) {
-        
-        char[] arr = s.toCharArray();
-        int count =0;
-        int max  =0 ;
-        for(int i=0;i<arr.length;i++){
-            char c = arr[i];
-            if(c == ']'){
-                count++;
-                max = Math.max(count, max);
-            }else{
-                count--;
+        int opening = 0;
+        int unbalanced = 0;
+
+        for (var c: s.getBytes()) {
+            if (c == '[') {
+                opening++;
+            } else {
+                if (opening > 0)
+                    opening--;
+                else
+                    unbalanced++;    
             }
         }
-        return (max+1)/2;
+
+        return unbalanced / 2 + unbalanced % 2;
     }
 }
