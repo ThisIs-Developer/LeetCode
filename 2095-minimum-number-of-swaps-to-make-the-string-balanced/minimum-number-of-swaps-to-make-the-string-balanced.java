@@ -1,14 +1,15 @@
 class Solution {
-    public int minSwaps(String str) {
-        int count = 0;
-        Stack<Character> s = new Stack();
-        for (char ch : str.toCharArray()) {
-            if (ch == '[') s.push(ch);
-            else {
-                if (!s.isEmpty()) s.pop();
-                else count++;
+    public int minSwaps(String s) {
+        int tmp = 0;
+        int res = 0;
+        for(char a:s.toCharArray()){
+            if(a==']'){
+                tmp++;
+            }else{
+                tmp--;
             }
+            res = Math.max(res,tmp);
         }
-        return (count+1)/2;
+        return (res + 1)/2;
     }
 }
