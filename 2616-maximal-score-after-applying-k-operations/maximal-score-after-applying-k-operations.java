@@ -1,17 +1,14 @@
 class Solution {
     public long maxKelements(int[] nums, int k) {
-        PriorityQueue<Integer> heap = new PriorityQueue<>((a,b) -> b - a);
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> b - a);
+        for(int i : nums){
+            pq.add(i);
+        }
         long ans = 0;
-        int num;
-        for(int ch : nums)
-            heap.add(ch);
         while(k-- > 0){
-            num = heap.poll();
-            ans += num;
-            if(num % 3 == 0)
-                num /= 3;
-            else num = num/3 + 1;
-            heap.add(num);
+            int n = pq.poll();
+            ans += n;
+            pq.offer((n + 2)/ 3);
         }
         return ans;
     }
