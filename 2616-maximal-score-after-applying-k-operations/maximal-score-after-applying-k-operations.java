@@ -1,18 +1,16 @@
 class Solution {
     public long maxKelements(int[] nums, int k) {
-        PriorityQueue<Integer> q=new PriorityQueue<>(Comparator.reverseOrder());
-        for(int i=0;i<nums.length;i++){
-            q.add(nums[i]);
-        }
-        long ans=0;
+        long score=0;
+        PriorityQueue<Integer> pq=new PriorityQueue<>(Collections.reverseOrder());
+        for(int elem:nums){
+            pq.offer(elem);
+        }    
         while(k>0){
-            int a=q.peek();
-            ans+=a;
-            int b=(int)Math.ceil(a/3.0);
-            q.remove(a);
-            q.add(b);
+            int p=pq.poll();
+            score+=(long)p;
+            pq.add((int)Math.ceil(p/(double)3));
             k--;
         }
-        return ans;
+        return score;
     }
 }
