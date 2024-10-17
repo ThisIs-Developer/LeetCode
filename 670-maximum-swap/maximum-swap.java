@@ -1,30 +1,24 @@
 class Solution {
-    public int maximumSwap(int number) {
-        int count[] = new int[10];
-        int lastPos[] = new int[10];
-        StringBuilder str = new StringBuilder();
-        str.append(number);
-        for(int i=0;i<str.length();i++) {
-            count[str.charAt(i)-'0']++;
-            lastPos[str.charAt(i)-'0'] = i;
-        }
-        int i = 0;
-        for(int num=9;num>=0;num--) {
-            while(count[num]>0) {
-                if((str.charAt(i)-'0') == num) {
-                    count[num]--;
-                    i++;
-                } else {
-                    //System.out.println(num+" "+i+" "+lastPos[num]);
-                    char currChar = str.charAt(i);
-                    str.setCharAt(i, str.charAt(lastPos[num]));
-                    str.setCharAt(lastPos[num], currChar);
-                    num = -1;
-                    break;
+    public int maximumSwap(int num) {
+        char[] chs = (""+num).toCharArray();
+        int res = num;
+        for(int i=0;i<chs.length-1;i++) {
+            int n = chs[i]-'0';
+            int k = chs.length-1;
+            // find the biggest digit and swap if > n
+            for(int j=chs.length-2;j>i;j--) {
+                if(chs[k]-'0'<chs[j]-'0') {
+                    k=j;
                 }
             }
+            if(chs[k]-'0'>chs[i]-'0') {
+                char[] chs1 = Arrays.copyOf(chs, chs.length);
+                char c=chs1[k];
+                chs1[k]=chs1[i];
+                chs1[i]=c;
+                res = Math.max(res,Integer.valueOf(new String(chs1)));
+            }
         }
-        System.out.println(str);
-        return new Integer(str.toString());
+        return res;
     }
 }
