@@ -178,6 +178,7 @@ section h2 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
+    min-height: 100px; /* Ensure minimum height */
 }
 
 .layout-placeholder {
@@ -196,6 +197,7 @@ section h2 {
     transition: all 0.3s ease;
     background: white;
     text-align: center;
+    min-height: 120px; /* Ensure minimum height for visibility */
 }
 
 .layout-option:hover {

@@ -410,8 +410,6 @@ class CollageSystem {
         const container = document.getElementById('layoutOptions');
         const currentImageCount = this.uploadedImages.length;
         
-        console.log('PopulateLayoutOptions called with:', { filterCount, currentImageCount });
-        
         if (currentImageCount < this.minImages) {
             container.innerHTML = '<p class="layout-placeholder">Upload at least 2 images to see available layouts</p>';
             return;
@@ -431,50 +429,40 @@ class CollageSystem {
             }
         }
         
-        console.log('Layouts to show:', layoutsToShow);
-        
         if (layoutsToShow.length === 0) {
             container.innerHTML = '<p class="layout-placeholder">No layouts available for selected image count</p>';
             return;
         }
         
-        try {
-            layoutsToShow.forEach(layout => {
-                console.log('Creating layout option for:', layout.name);
-                const layoutOption = document.createElement('div');
-                layoutOption.className = 'layout-option';
-                layoutOption.dataset.layoutId = layout.id;
-                
-                if (this.selectedLayout && this.selectedLayout.id === layout.id) {
-                    layoutOption.classList.add('selected');
-                }
-                
-                const previewCells = this.createLayoutPreviewCells(layout);
-                console.log('Preview cells for', layout.name, ':', previewCells);
-                
-                layoutOption.innerHTML = `
-                    <div class="layout-preview" style="grid-template-rows: repeat(${layout.grid.rows}, 1fr); grid-template-columns: repeat(${layout.grid.cols}, 1fr);">
-                        ${previewCells}
-                    </div>
-                    <div class="layout-name">${layout.name}</div>
-                    <div class="layout-description">${layout.description}</div>
-                `;
-                
-                layoutOption.addEventListener('click', () => this.selectLayout(layout));
-                container.appendChild(layoutOption);
-                console.log('Layout option added to container');
-            });
-        } catch (error) {
-            console.error('Error creating layout options:', error);
-            container.innerHTML = '<p class="layout-placeholder">Error loading layouts</p>';
-        }
+        layoutsToShow.forEach((layout, index) => {
+            const layoutOption = document.createElement('div');
+            layoutOption.className = 'layout-option';
+            layoutOption.dataset.layoutId = layout.id;
+            layoutOption.setAttribute('role', 'button');
+            layoutOption.setAttribute('tabindex', '0');
+            layoutOption.setAttribute('aria-label', `Select ${layout.name} layout`);
+            
+            if (this.selectedLayout && this.selectedLayout.id === layout.id) {
+                layoutOption.classList.add('selected');
+            }
+            
+            layoutOption.innerHTML = `
+                <div class="layout-preview" style="display: grid; grid-template-rows: repeat(${layout.grid.rows}, 1fr); grid-template-columns: repeat(${layout.grid.cols}, 1fr); height: 80px; gap: 3px; padding: 8px; background: #f7fafc; border-radius: 6px; margin-bottom: 10px;">
+                    ${this.createLayoutPreviewCells(layout)}
+                </div>
+                <div class="layout-name" style="font-weight: 600; color: #2d3748; font-size: 0.9rem;">${layout.name}</div>
+                <div class="layout-description" style="font-size: 0.8rem; color: #718096; margin-top: 5px;">${layout.description}</div>
+            `;
+            
+            layoutOption.addEventListener('click', () => this.selectLayout(layout));
+            container.appendChild(layoutOption);
+        });
     }
     
     createLayoutPreviewCells(layout) {
-        const totalCells = layout.grid.rows * layout.grid.cols;
         const cells = [];
         
-        // Create grid cells
+        // Create grid cells for visual preview
         for (let row = 1; row <= layout.grid.rows; row++) {
             for (let col = 1; col <= layout.grid.cols; col++) {
                 const hasImage = layout.cells.some(cell => 
@@ -503,7 +491,10 @@ class CollageSystem {
             option.classList.remove('selected');
         });
         
-        document.querySelector(`[data-layout-id="${layout.id}"]`).classList.add('selected');
+        const selectedOption = document.querySelector(`[data-layout-id="${layout.id}"]`);
+        if (selectedOption) {
+            selectedOption.classList.add('selected');
+        }
         
         this.updateCollagePreview();
         this.updateControlButtons();
