@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Collage System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Enhanced Collage System</h1>
+            <p>Create beautiful collages with 2-6 images using flexible layouts</p>
+        </header>
+
+        <main>
+            <!-- Image Upload Section -->
+            <section class="upload-section">
+                <h2>Upload Images</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-placeholder">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7,10 12,15 17,10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <p>Drop images here or click to upload</p>
+                        <p class="upload-hint">Support 2-6 images (JPG, PNG, GIF)</p>
+                    </div>
+                    <input type="file" id="fileInput" multiple accept="image/*" hidden>
+                </div>
+                
+                <div class="uploaded-images" id="uploadedImages"></div>
+                <div class="image-count" id="imageCount">0 images uploaded</div>
+            </section>
+
+            <!-- Layout Selection Section -->
+            <section class="layout-section">
+                <h2>Choose Layout</h2>
+                <div class="layout-filter">
+                    <label for="imageCountFilter">Filter by image count:</label>
+                    <select id="imageCountFilter" disabled>
+                        <option value="">Select images first</option>
+                        <option value="2">2 Images</option>
+                        <option value="3">3 Images</option>
+                        <option value="4">4 Images</option>
+                        <option value="5">5 Images</option>
+                        <option value="6">6 Images</option>
+                    </select>
+                </div>
+                
+                <div class="layout-options" id="layoutOptions">
+                    <p class="layout-placeholder">Upload images to see available layouts</p>
+                </div>
+            </section>
+
+            <!-- Collage Preview Section -->
+            <section class="preview-section">
+                <h2>Collage Preview</h2>
+                <div class="preview-container">
+                    <div class="collage-canvas" id="collageCanvas">
+                        <div class="canvas-placeholder">
+                            <p>Your collage will appear here</p>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-controls">
+                        <button id="createCollageBtn" class="btn btn-primary" disabled>
+                            Create Collage
+                        </button>
+                        <button id="downloadBtn" class="btn btn-secondary" disabled>
+                            Download Collage
+                        </button>
+                        <button id="demoBtn" class="btn btn-outline">
+                            Load Demo Images
+                        </button>
+                        <button id="resetBtn" class="btn btn-outline">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Options Section -->
+            <section class="options-section">
+                <h2>Options</h2>
+                <div class="options-grid">
+                    <div class="option-group">
+                        <label for="canvasSize">Canvas Size:</label>
+                        <select id="canvasSize">
+                            <option value="800x600">800x600</option>
+                            <option value="1024x768" selected>1024x768</option>
+                            <option value="1200x900">1200x900</option>
+                            <option value="1600x1200">1600x1200</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="spacing">Image Spacing:</label>
+                        <input type="range" id="spacing" min="0" max="20" value="5">
+                        <span id="spacingValue">5px</span>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="backgroundColor">Background Color:</label>
+                        <input type="color" id="backgroundColor" value="#ffffff">
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="borderRadius">Corner Radius:</label>
+                        <input type="range" id="borderRadius" min="0" max="20" value="0">
+                        <span id="borderRadiusValue">0px</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
