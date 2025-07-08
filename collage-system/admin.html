@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Enhanced Collage System</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border-radius: 12px;
+        }
+        
+        .admin-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .admin-nav {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .admin-nav a {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+        
+        .admin-nav a:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .action-btn.view {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .action-btn.download {
+            background: #28a745;
+            color: white;
+        }
+        
+        .action-btn.delete {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .action-btn.promote {
+            background: #ffc107;
+            color: black;
+        }
+        
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .recent-activity {
+            margin-top: 20px;
+        }
+        
+        .activity-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-title {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .activity-meta {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .admin-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-header">
+            <div class="admin-title">Admin Panel</div>
+            <div class="admin-nav">
+                <a href="/dashboard.html">Dashboard</a>
+                <a href="/auth/logout">Logout</a>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="userCount">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="collageCount">0</div>
+                <div class="stat-label">Total Collages</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="recentCount">0</div>
+                <div class="stat-label">Recent Activity</div>
+            </div>
+        </div>
+        
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="showTab('users')">Users</button>
+            <button class="tab-btn" onclick="showTab('collages')">Collages</button>
+            <button class="tab-btn" onclick="showTab('activity')">Recent Activity</button>
+        </div>
+        
+        <div id="users-tab" class="tab-content active">
+            <h2>User Management</h2>
+            <div id="usersContent">
+                <div class="loading">Loading users...</div>
+            </div>
+        </div>
+        
+        <div id="collages-tab" class="tab-content">
+            <h2>Collage Management</h2>
+            <div id="collagesContent">
+                <div class="loading">Loading collages...</div>
+            </div>
+        </div>
+        
+        <div id="activity-tab" class="tab-content">
+            <h2>Recent Activity</h2>
+            <div id="activityContent">
+                <div class="loading">Loading activity...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        
+        // Check admin authentication
+        async function checkAdminAuth() {
+            try {
+                const response = await fetch('/auth/status');
+                const data = await response.json();
+                
+                if (!data.authenticated || data.user.role !== 'admin') {
+                    window.location.href = '/login.html';
+                    return;
+                }
+                
+                currentUser = data.user;
+                loadDashboardData();
+            } catch (error) {
+                console.error('Authentication check failed:', error);
+                window.location.href = '/login.html';
+            }
+        }
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('/api/admin/stats');
+                const stats = await response.json();
+                
+                document.getElementById('userCount').textContent = stats.userCount;
+                document.getElementById('collageCount').textContent = stats.collageCount;
+                document.getElementById('recentCount').textContent = stats.recentActivity.length;
+                
+                loadUsers();
+                loadCollages();
+                loadRecentActivity(stats.recentActivity);
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+            }
+        }
+        
+        // Load users
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/admin/users');
+                const users = await response.json();
+                
+                const usersHTML = `
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${users.map(user => `
+                                <tr>
+                                    <td>${user.name}</td>
+                                    <td>${user.email}</td>
+                                    <td>${user.role}</td>
+                                    <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                                    <td>
+                                        ${user.role === 'user' ? 
+                                            `<button class="action-btn promote" onclick="promoteUser(${user.id})">Make Admin</button>` : 
+                                            `<button class="action-btn" disabled>Admin</button>`
+                                        }
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                document.getElementById('usersContent').innerHTML = usersHTML;
+            } catch (error) {
+                console.error('Failed to load users:', error);
+                document.getElementById('usersContent').innerHTML = '<div class="error">Failed to load users</div>';
+            }
+        }
+        
+        // Load collages
+        async function loadCollages() {
+            try {
+                const response = await fetch('/api/admin/collages');
+                const collages = await response.json();
+                
+                const collagesHTML = `
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>User</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${collages.map(collage => `
+                                <tr>
+                                    <td>${collage.title}</td>
+                                    <td>${collage.user_name} (${collage.user_email})</td>
+                                    <td>${new Date(collage.created_at).toLocaleDateString()}</td>
+                                    <td>
+                                        <button class="action-btn view" onclick="viewCollage(${collage.id})">View</button>
+                                        <button class="action-btn download" onclick="downloadCollage(${collage.id})">Download</button>
+                                        <button class="action-btn delete" onclick="deleteCollage(${collage.id})">Delete</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                document.getElementById('collagesContent').innerHTML = collagesHTML;
+            } catch (error) {
+                console.error('Failed to load collages:', error);
+                document.getElementById('collagesContent').innerHTML = '<div class="error">Failed to load collages</div>';
+            }
+        }
+        
+        // Load recent activity
+        function loadRecentActivity(activities) {
+            const activityHTML = activities.length > 0 ? `
+                <div class="recent-activity">
+                    ${activities.map(activity => `
+                        <div class="activity-item">
+                            <div class="activity-title">${activity.title}</div>
+                            <div class="activity-meta">
+                                by ${activity.user_name} • ${new Date(activity.created_at).toLocaleDateString()}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : '<p>No recent activity</p>';
+            
+            document.getElementById('activityContent').innerHTML = activityHTML;
+        }
+        
+        // Show tab
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Promote user to admin
+        async function promoteUser(userId) {
+            if (!confirm('Are you sure you want to make this user an admin?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/admin/users/${userId}/role`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ role: 'admin' })
+                });
+                
+                if (response.ok) {
+                    alert('User promoted to admin successfully');
+                    loadUsers();
+                } else {
+                    alert('Failed to promote user');
+                }
+            } catch (error) {
+                console.error('Failed to promote user:', error);
+                alert('Failed to promote user');
+            }
+        }
+        
+        // View collage
+        async function viewCollage(collageId) {
+            try {
+                const response = await fetch(`/api/admin/collages/${collageId}`);
+                const collage = await response.json();
+                
+                // Open collage in new window for viewing
+                const newWindow = window.open('', '_blank', 'width=800,height=600');
+                newWindow.document.write(`
+                    <html>
+                        <head><title>${collage.title}</title></head>
+                        <body style="margin: 0; padding: 20px; font-family: Arial, sans-serif;">
+                            <h1>${collage.title}</h1>
+                            <p>${collage.description || 'No description'}</p>
+                            <p><strong>Created by:</strong> ${collage.user_name} (${collage.user_email})</p>
+                            <p><strong>Created:</strong> ${new Date(collage.created_at).toLocaleDateString()}</p>
+                            <div style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                                <h3>Collage Configuration</h3>
+                                <pre>${JSON.stringify(collage.layout_config, null, 2)}</pre>
+                            </div>
+                        </body>
+                    </html>
+                `);
+            } catch (error) {
+                console.error('Failed to view collage:', error);
+                alert('Failed to view collage');
+            }
+        }
+        
+        // Download collage
+        async function downloadCollage(collageId) {
+            try {
+                const response = await fetch(`/api/admin/collages/${collageId}`);
+                const collage = await response.json();
+                
+                // Create download link for collage data
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(collage, null, 2));
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", dataStr);
+                downloadAnchor.setAttribute("download", `collage-${collage.id}-${collage.title}.json`);
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+            } catch (error) {
+                console.error('Failed to download collage:', error);
+                alert('Failed to download collage');
+            }
+        }
+        
+        // Delete collage
+        async function deleteCollage(collageId) {
+            if (!confirm('Are you sure you want to delete this collage?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/admin/collages/${collageId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    alert('Collage deleted successfully');
+                    loadCollages();
+                    loadDashboardData(); // Refresh stats
+                } else {
+                    alert('Failed to delete collage');
+                }
+            } catch (error) {
+                console.error('Failed to delete collage:', error);
+                alert('Failed to delete collage');
+            }
+        }
+        
+        // Initialize admin panel
+        checkAdminAuth();
+    </script>
+</body>
+</html>
